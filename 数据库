@@ -6,3 +6,27 @@
  2.找出第二高的薪水
    首先将薪水按照薪资逆序排序，然后使用limit函数，其中limit函数 第一个参数代表的是从哪一个元素开始 从0开始   第二个参数代表的是取几个元素
    那么我们就可以使用 limit 1,1 来进行截取，然后再使用distinct进行去重，t1作为函数的查询结果，然后总体再使用ifnull(t1,null),来进行判空
+ 3.获取 Employee 表中第 n 高的薪水（Salary）
+   直接上代码：
+   CREATE FUNCTION getNthHighestSalary(N INT) RETURNS INT
+    BEGIN
+      set n = n - 1;
+      if n < 0 then
+      return null;
+      else
+      RETURN (
+          # Write your MySQL query statement below.
+          select ifnull((select
+                           distinct e.Salary
+                         from 
+                           Employee e
+                         order by
+                           e.Salary desc
+                         limit
+                            N,1)
+                          ,NULL)
+           as getNthHighestSalary
+
+      );
+      END if;
+    END
